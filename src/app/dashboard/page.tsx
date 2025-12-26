@@ -32,13 +32,17 @@ import {
   LogoutOutlined,
   QuestionCircleOutlined,
   DashboardOutlined,
-  CarOutlined,
+  RocketOutlined,
   ApiOutlined,
   SunOutlined,
   MoonOutlined,
   DownOutlined,
   CloudServerOutlined,
-  GlobalOutlined
+  GlobalOutlined,
+  ThunderboltOutlined,
+  FileSearchOutlined,
+  PercentageOutlined,
+  LineChartOutlined
 } from '@ant-design/icons'
 import enUS from 'antd/locale/en_US'
 import zhCN from 'antd/locale/zh_CN'
@@ -104,9 +108,9 @@ const i18nTexts = {
     
     // 统计卡片
     todayRecognition: '今日检测',
-    successRate: '成功率',
+    averageConfidence: '平均置信度',
     onlineDevices: '在线设备',
-    apiCalls: 'API调用',
+    inspectedLines: '已巡检线路',
     
     // 系统状态
     systemStatus: '系统状态',
@@ -137,9 +141,9 @@ const i18nTexts = {
     
     // 统计卡片
     todayRecognition: "Today's Detection",
-    successRate: 'Success Rate',
+    averageConfidence: 'Average Confidence',
     onlineDevices: 'Online Devices',
-    apiCalls: 'API Calls',
+    inspectedLines: 'Inspected Lines',
     
     // 系统状态
     systemStatus: 'System Status',
@@ -334,7 +338,7 @@ export default function DashboardPage() {
     },
     {
       key: 'detect',
-      icon: <CarOutlined />,
+      icon: <ThunderboltOutlined />,
       label: t.carRecognition,
       onClick: () => handleNavigation('detect')
     },
@@ -383,13 +387,30 @@ export default function DashboardPage() {
         :global(.custom-menu.ant-menu-dark .ant-menu-submenu-open > .ant-menu-submenu-title) {
           background-color: transparent !important;
         }
+        :global(.custom-menu.ant-menu-dark .ant-menu-sub) {
+          background-color: transparent !important;
+        }
         :global(.custom-menu.ant-menu-dark .ant-menu-sub .ant-menu-item) {
           background-color: transparent !important;
         }
         :global(.custom-menu.ant-menu-dark .ant-menu-sub .ant-menu-item:hover) {
           background-color: rgba(255, 255, 255, 0.08) !important;
         }
-        :global(.custom-menu.ant-menu-dark .ant-menu-sub .ant-menu-item-selected) {
+        :global(.custom-menu.ant-menu-dark .ant-menu-sub .ant-menu-item-selected),
+        :global(.custom-menu.ant-menu-dark .ant-menu-sub .ant-menu-item-active) {
+          background-color: rgba(255, 255, 255, 0.12) !important;
+        }
+        :global(.custom-menu.ant-menu-dark .ant-menu-submenu-open .ant-menu-sub) {
+          background-color: transparent !important;
+        }
+        :global(.custom-menu.ant-menu-dark .ant-menu-submenu-open .ant-menu-sub .ant-menu-item) {
+          background-color: transparent !important;
+        }
+        :global(.custom-menu.ant-menu-dark .ant-menu-submenu-open .ant-menu-sub .ant-menu-item:hover) {
+          background-color: rgba(255, 255, 255, 0.08) !important;
+        }
+        :global(.custom-menu.ant-menu-dark .ant-menu-submenu-open .ant-menu-sub .ant-menu-item-selected),
+        :global(.custom-menu.ant-menu-dark .ant-menu-submenu-open .ant-menu-sub .ant-menu-item-active) {
           background-color: rgba(255, 255, 255, 0.12) !important;
         }
       `}</style>
@@ -443,10 +464,9 @@ export default function DashboardPage() {
               borderBottom: '1px solid rgba(255,255,255,0.1)',
               paddingBottom: 16
             }}>
-              <CarOutlined style={{ fontSize: '24px', color: '#fff' }} />
               {!collapsed && (
-                <Title level={4} style={{ margin: '0 0 0 12px', color: '#fff', fontSize: '16px' }}>
-                  {currentLang === 'zh' ? '绝缘子检测' : 'Insulator Detection'}
+                <Title level={4} style={{ margin: 0, color: '#fff', fontSize: '16px' }}>
+                  循翼 Aerotrace
                 </Title>
               )}
             </div>
@@ -609,17 +629,18 @@ export default function DashboardPage() {
                     <StatisticCard
                       title={t.todayRecognition}
                       value={30}
-                      prefix={<CarOutlined />}
+                      prefix={<FileSearchOutlined />}
                       valueStyle={{ color: '#3f8600' }}
                       isDark={isDark}
                     />
                   </Col>
                   <Col span={6}>
                     <StatisticCard
-                      title={t.successRate}
-                      value={99.0}
+                      title={t.averageConfidence}
+                      value={95.5}
                       precision={1}
                       suffix="%"
+                      prefix={<PercentageOutlined />}
                       valueStyle={{ color: '#cf1322' }}
                       isDark={isDark}
                     />
@@ -635,9 +656,9 @@ export default function DashboardPage() {
                   </Col>
                   <Col span={6}>
                     <StatisticCard
-                      title={t.apiCalls}
-                      value={11}
-                      prefix={<ApiOutlined />}
+                      title={t.inspectedLines}
+                      value={12}
+                      prefix={<LineChartOutlined />}
                       valueStyle={{ color: '#722ed1' }}
                       isDark={isDark}
                     />

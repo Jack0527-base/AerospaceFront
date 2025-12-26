@@ -29,7 +29,7 @@ export default function Navigation() {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-8">
             <Link href="/dashboard" className="text-xl font-bold text-blue-600">
-              绝缘子检测系统
+              循翼 Aerotrace
             </Link>
             <div className="flex space-x-4">
               {navItems.map((item) => {

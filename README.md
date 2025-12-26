@@ -1,6 +1,6 @@
-# 绝缘子裂痕检测前端
+# 循翼 Aerotrace
 
-> 🚀 基于 **Next.js 14 + TypeScript** 的绝缘子裂痕检测管理系统前端。
+> 🚀 基于 **Next.js 14 + TypeScript** 的循翼 Aerotrace 官网前端。
 
 * **在线演示**：<https://vserdioppagg.sealosbja.site>
 * **后端接口**：由 `InsulatorDetection.Server` 提供，详见 API 集成文档

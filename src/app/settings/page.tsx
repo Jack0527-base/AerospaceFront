@@ -31,7 +31,7 @@ import {
   SettingOutlined,
   QuestionCircleOutlined,
   DashboardOutlined,
-  CarOutlined,
+  ThunderboltOutlined,
   SunOutlined,
   MoonOutlined,
   UserOutlined,
@@ -301,7 +301,7 @@ function SettingsPageContent() {
     },
     {
       key: 'detect',
-      icon: <CarOutlined />,
+      icon: <ThunderboltOutlined />,
       label: t.carRecognition,
       onClick: () => handleNavigation('detect')
     },
@@ -584,14 +584,31 @@ function SettingsPageContent() {
         :global(.custom-settings-menu.ant-menu-dark .ant-menu-submenu-open > .ant-menu-submenu-title) {
           background-color: transparent !important;
         }
+        :global(.custom-settings-menu.ant-menu-dark .ant-menu-sub) {
+          background-color: transparent !important;
+        }
         :global(.custom-settings-menu.ant-menu-dark .ant-menu-sub .ant-menu-item) {
           background-color: transparent !important;
         }
         :global(.custom-settings-menu.ant-menu-dark .ant-menu-sub .ant-menu-item:hover) {
+          background-color: rgba(255, 255, 255, 0.08) !important;
+        }
+        :global(.custom-settings-menu.ant-menu-dark .ant-menu-sub .ant-menu-item-selected),
+        :global(.custom-settings-menu.ant-menu-dark .ant-menu-sub .ant-menu-item-active) {
+          background-color: rgba(255, 255, 255, 0.12) !important;
+        }
+        :global(.custom-settings-menu.ant-menu-dark .ant-menu-submenu-open .ant-menu-sub) {
           background-color: transparent !important;
         }
-        :global(.custom-settings-menu.ant-menu-dark .ant-menu-sub .ant-menu-item-selected) {
+        :global(.custom-settings-menu.ant-menu-dark .ant-menu-submenu-open .ant-menu-sub .ant-menu-item) {
           background-color: transparent !important;
+        }
+        :global(.custom-settings-menu.ant-menu-dark .ant-menu-submenu-open .ant-menu-sub .ant-menu-item:hover) {
+          background-color: rgba(255, 255, 255, 0.08) !important;
+        }
+        :global(.custom-settings-menu.ant-menu-dark .ant-menu-submenu-open .ant-menu-sub .ant-menu-item-selected),
+        :global(.custom-settings-menu.ant-menu-dark .ant-menu-submenu-open .ant-menu-sub .ant-menu-item-active) {
+          background-color: rgba(255, 255, 255, 0.12) !important;
         }
       `}</style>
       <ConfigProvider
@@ -644,7 +661,7 @@ function SettingsPageContent() {
               borderBottom: '1px solid rgba(255,255,255,0.1)',
               paddingBottom: 16
             }}>
-              <CarOutlined style={{ fontSize: '24px', color: '#fff' }} />
+              <ThunderboltOutlined style={{ fontSize: '24px', color: '#fff' }} />
               {!collapsed && (
                 <Title level={4} style={{ margin: '0 0 0 12px', color: '#fff', fontSize: '16px' }}>
                   绝缘子检测

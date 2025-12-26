@@ -332,7 +332,7 @@ function LoginPageContent() {
           <section className="container">
             <header>
               <h1>欢迎回来！</h1>
-              <p>绝缘子检测系统登录</p>
+              <p>循翼 Aerotrace 登录</p>
             </header>
             
             {successMessage && (

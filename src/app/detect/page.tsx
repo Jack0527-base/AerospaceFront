@@ -18,7 +18,6 @@ import {
   Tabs,
   Alert,
   List,
-  Progress,
   Tag,
   Divider,
   theme,
@@ -34,7 +33,7 @@ import {
   SettingOutlined,
   QuestionCircleOutlined,
   DashboardOutlined,
-  CarOutlined,
+  ThunderboltOutlined,
   UploadOutlined,
   InboxOutlined,
   SunOutlined,
@@ -169,7 +168,7 @@ export default function InsulatorDetectionPage() {
     },
     {
       key: 'detect',
-      icon: <CarOutlined />,
+      icon: <ThunderboltOutlined />,
       label: '绝缘子检测',
     },
     {
@@ -348,13 +347,6 @@ export default function InsulatorDetectionPage() {
         }
       })
       
-      // 显示状态提示
-      if (selectedFile.size > 3 * 1024 * 1024) {
-        message.loading('图片较大，正在处理...', 2)
-      } else {
-        message.loading('正在检测绝缘子缺陷...', 2)
-      }
-      
       // 使用Roboflow API进行检测
       const response: DetectResponse = await backendApi.detect.byImage(selectedFile)
       
@@ -365,8 +357,7 @@ export default function InsulatorDetectionPage() {
 
       if (response.isSuccess && response.infos) {
         setDetectionResults(response.infos)
-        message.success(`检测成功！识别到 ${response.infos.length} 个缺陷`)
-        console.log(`检测成功，识别到 ${response.infos.length} 个缺陷`)
+        console.log(`检测成功！识别到 ${response.infos.length} 个缺陷`)
       } else {
         const errorMessage = response.messages?.[0]?.description || '绝缘子缺陷检测失败'
         setError(errorMessage)
@@ -380,7 +371,7 @@ export default function InsulatorDetectionPage() {
       
       // 针对不同类型的错误提供不同的处理
       if (error.message?.includes('认证失败') || error.message?.includes('401') || error.message?.includes('Unauthorized')) {
-        errorMsg = '认证失败，请稍后重试。如果问题持续，请联系管理员。'
+        errorMsg = '认证失败，请稍后重试'
         message.error(errorMsg)
       } else if (error.message?.includes('识别失败')) {
         errorMsg = '图片中未能识别出缺陷，请确保：\n1. 图片中包含清晰可见的绝缘子\n2. 绝缘子没有被遮挡\n3. 图片光线充足、对比度良好'
@@ -462,6 +453,29 @@ export default function InsulatorDetectionPage() {
         :global(.custom-menu.ant-menu-dark .ant-menu-sub) {
           background-color: transparent !important;
         }
+        :global(.custom-menu.ant-menu-dark .ant-menu-sub .ant-menu-item) {
+          background-color: transparent !important;
+        }
+        :global(.custom-menu.ant-menu-dark .ant-menu-sub .ant-menu-item:hover) {
+          background-color: rgba(255, 255, 255, 0.08) !important;
+        }
+        :global(.custom-menu.ant-menu-dark .ant-menu-sub .ant-menu-item-selected),
+        :global(.custom-menu.ant-menu-dark .ant-menu-sub .ant-menu-item-active) {
+          background-color: rgba(255, 255, 255, 0.12) !important;
+        }
+        :global(.custom-menu.ant-menu-dark .ant-menu-submenu-open .ant-menu-sub) {
+          background-color: transparent !important;
+        }
+        :global(.custom-menu.ant-menu-dark .ant-menu-submenu-open .ant-menu-sub .ant-menu-item) {
+          background-color: transparent !important;
+        }
+        :global(.custom-menu.ant-menu-dark .ant-menu-submenu-open .ant-menu-sub .ant-menu-item:hover) {
+          background-color: rgba(255, 255, 255, 0.08) !important;
+        }
+        :global(.custom-menu.ant-menu-dark .ant-menu-submenu-open .ant-menu-sub .ant-menu-item-selected),
+        :global(.custom-menu.ant-menu-dark .ant-menu-submenu-open .ant-menu-sub .ant-menu-item-active) {
+          background-color: rgba(255, 255, 255, 0.12) !important;
+        }
       `}</style>
       <ConfigProvider
         theme={{
@@ -512,7 +526,7 @@ export default function InsulatorDetectionPage() {
               borderBottom: '1px solid rgba(255,255,255,0.1)',
               paddingBottom: 16
             }}>
-              <CarOutlined style={{ fontSize: '24px', color: '#fff' }} />
+              <ThunderboltOutlined style={{ fontSize: '24px', color: '#fff' }} />
               {!collapsed && (
                 <Title level={4} style={{ margin: '0 0 0 12px', color: '#fff', fontSize: '16px' }}>
                   绝缘子检测
@@ -618,7 +632,7 @@ export default function InsulatorDetectionPage() {
             }}>
               <div style={{ marginBottom: '24px' }}>
                 <Title level={2} style={{ margin: 0, display: 'flex', alignItems: 'center' }}>
-                  <CarOutlined style={{ marginRight: '12px', color: currentTheme.colorPrimary }} />
+                  <ThunderboltOutlined style={{ marginRight: '12px', color: currentTheme.colorPrimary }} />
                   绝缘子缺陷检测
                 </Title>
                 <Text type="secondary">上传图片，智能检测绝缘子缺陷</Text>
@@ -747,7 +761,7 @@ export default function InsulatorDetectionPage() {
                             alt="预览"
                             style={{
                               maxWidth: '100%',
-                              maxHeight: '300px',
+                              maxHeight: '500px',
                               borderRadius: '8px',
                               objectFit: 'contain',
                               display: 'block'
@@ -799,7 +813,8 @@ export default function InsulatorDetectionPage() {
                             // 根据class和color字段判断类型
                             const className = (result.class || '').toLowerCase()
                             const isInsulator = className === 'insulator' || className === 'insulators' || className.includes('insulator')
-                            const isDefect = className === 'crack' || className === 'defect' || className.includes('crack') || className.includes('defect') || result.color === 'red'
+                            // 如果不是绝缘子，则默认为缺陷
+                            const isDefect = !isInsulator || result.color === 'red'
                             
                             // 缺陷用红色，绝缘子用蓝色
                             const boxColor = isDefect ? '#ff4d4f' : '#1890ff'
@@ -992,11 +1007,12 @@ export default function InsulatorDetectionPage() {
                                       // 判断类型
                                       const className = (result.class || '').toLowerCase()
                                       const isInsulator = className === 'insulator' || className === 'insulators' || className.includes('insulator')
-                                      const isDefect = className === 'crack' || className === 'defect' || className.includes('crack') || className.includes('defect') || result.color === 'red'
+                                      // 如果不是绝缘子，则默认为缺陷
+                                      const isDefect = !isInsulator || result.color === 'red'
                                       
-                                      const typeLabel = isInsulator ? '绝缘子' : isDefect ? '裂痕' : '未知'
-                                      const typeColor = isInsulator ? 'blue' : isDefect ? 'red' : 'default'
-                                      const itemTitle = isInsulator ? `绝缘子 #${index + 1}` : isDefect ? `缺陷 #${index + 1}` : `检测项 #${index + 1}`
+                                      const typeLabel = isInsulator ? '绝缘子' : '缺陷'
+                                      const typeColor = isInsulator ? 'blue' : 'red'
+                                      const itemTitle = isInsulator ? `绝缘子 #${index + 1}` : `缺陷 #${index + 1}`
                                       
                                       return (
                                         <List.Item 
@@ -1013,7 +1029,7 @@ export default function InsulatorDetectionPage() {
                                             avatar={
                                               <FileImageOutlined style={{ 
                                                 fontSize: '24px', 
-                                                color: isInsulator ? '#1890ff' : isDefect ? '#ff4d4f' : currentTheme.colorPrimary
+                                                color: isInsulator ? '#1890ff' : '#ff4d4f'
                                               }} />
                                             }
                                             title={
@@ -1028,13 +1044,7 @@ export default function InsulatorDetectionPage() {
                                               <div>
                                                 <div style={{ marginBottom: '8px' }}>
                                                   <Text type="secondary">置信度: </Text>
-                                                  <Progress
-                                                    percent={result.confidence || 0}
-                                                    size="small"
-                                                    strokeColor={isInsulator ? '#1890ff' : isDefect ? '#ff4d4f' : undefined}
-                                                    style={{ width: '120px', display: 'inline-block' }}
-                                                  />
-                                                  <Text style={{ marginLeft: '8px' }}>
+                                                  <Text style={{ marginLeft: '4px', fontWeight: 500 }}>
                                                     {result.confidence ? `${result.confidence}%` : '未知'}
                                                   </Text>
                                                 </div>

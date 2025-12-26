@@ -27,7 +27,7 @@ export function Header() {
             height={32} 
             className={styles.header.logo}
           />
-          <span className={styles.header.title}>车牌识别系统</span>
+          <span className={styles.header.title}>循翼 Aerotrace</span>
         </div>
         
         <div className="flex items-center gap-4">

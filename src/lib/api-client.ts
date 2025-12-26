@@ -331,13 +331,10 @@ export class ApiClient {
         if (isInsulator) {
           number = `绝缘子-${index + 1}`
           color = 'blue'
-        } else if (isDefect) {
+        } else {
+          // 如果不是绝缘子，则默认为缺陷
           number = `缺陷-${index + 1}`
           color = 'red'
-        } else {
-          // 如果无法识别，根据class名称判断
-          number = `${className || '未知'}-${index + 1}`
-          color = 'orange' // 未知类型用橙色
         }
         
         return {
