@@ -241,9 +241,9 @@ export default function NestDetectionPage() {
     
     // 根据文件大小给出不同提示
     if (file.size > 3 * 1024 * 1024) {
-      message.warning(`文件较大 (${(file.size / 1024 / 1024).toFixed(1)}MB)，识别时将自动优化处理以确保最佳识别效果`)
+      message.warning(t.fileTooLarge.replace('{size}', (file.size / 1024 / 1024).toFixed(1)))
     } else {
-      message.success(`图片 "${file.name}" 上传成功，可以开始识别了`)
+      message.success(t.uploadSuccess.replace('{name}', file.name))
     }
     
     console.log('文件已设置到state:', file)
@@ -298,14 +298,14 @@ export default function NestDetectionPage() {
         // 验证文件类型
         const isImage = file.type.startsWith('image/')
         if (!isImage) {
-          message.error('只能上传图片文件!')
+          message.error(t.onlyImageFiles)
           return
         }
         
         // 设置最大文件大小为50MB（压缩后会小于2MB）
         const isLt50M = file.size / 1024 / 1024 < 50
         if (!isLt50M) {
-          message.error('图片大小不能超过 50MB!')
+          message.error(t.fileSizeExceeded)
           return
         }
         
@@ -325,13 +325,13 @@ export default function NestDetectionPage() {
     console.log('开始检测，当前选中文件:', selectedFile)
     
     if (!selectedFile) {
-      message.error('请先选择图片文件')
+      message.error(t.selectImageFirst)
       return
     }
 
     // 验证文件是否有效
     if (!(selectedFile instanceof File)) {
-      message.error('文件格式无效，请重新选择')
+      message.error(t.invalidFileFormat)
       setSelectedFile(null)
       setPreviewUrl('')
       return
@@ -391,31 +391,29 @@ export default function NestDetectionPage() {
         console.error('检测失败:', errorMessage)
       }
     } catch (error: any) {
-      console.error('检测过程中出错:', error)
-      
-      let errorMsg = '检测过程中出现错误'
+      let errorMsg = t.detectionError
       
       // 针对不同类型的错误提供不同的处理
       if (error.message?.includes('认证失败') || error.message?.includes('401') || error.message?.includes('Unauthorized')) {
-        errorMsg = '认证失败，请稍后重试'
+        errorMsg = t.authFailed
         message.error(errorMsg)
       } else if (error.message?.includes('识别失败')) {
-        errorMsg = '图片中未能识别出鸟巢，请确保：\n1. 图片中包含清晰可见的鸟巢\n2. 鸟巢没有被遮挡\n3. 图片光线充足、对比度良好'
+        errorMsg = t.noNestDetected
         message.error(errorMsg)
       } else if (error.message?.includes('文件太大') || error.message?.includes('400')) {
-        errorMsg = '图片处理失败，请尝试使用更小或质量更好的图片文件'
+        errorMsg = t.imageProcessFailed
         message.error(errorMsg)
       } else if (error.message?.includes('压缩失败') || error.message?.includes('图片加载失败')) {
-        errorMsg = '图片处理失败，请检查图片格式是否正确（支持JPG、PNG格式）'
+        errorMsg = t.imageFormatError
         message.error(errorMsg)
       } else if (error.message?.includes('Network') || error.message?.includes('网络')) {
-        errorMsg = '网络连接失败，请检查网络连接后重试'
+        errorMsg = t.networkError
         message.error(errorMsg)
       } else if (error.message?.includes('timeout') || error.message?.includes('超时')) {
-        errorMsg = '请求超时，请重试'
+        errorMsg = t.requestTimeout
         message.error(errorMsg)
       } else {
-        errorMsg = error.message || '检测过程中出现未知错误'
+        errorMsg = error.message || t.unknownError
         message.error(errorMsg)
       }
       
@@ -450,8 +448,7 @@ export default function NestDetectionPage() {
     setActiveTab('1')
     setPreviewImageSize(null)
     
-    console.log('已清空所有数据')
-    message.info('已清空所有数据')
+    message.info(t.dataCleared)
   }
 
   if (!isAuthenticated) {
@@ -997,7 +994,7 @@ export default function NestDetectionPage() {
                                   description={
                                     <div>
                                       <div style={{ marginBottom: '8px' }}>{error}</div>
-                                      {error.includes('识别失败') && (
+                                      {(error.includes('识别失败') || error.includes('No nest detected') || error === t.noNestDetected) && (
                                         <div style={{ 
                                           padding: '8px 12px', 
                                           background: isDark ? '#1f1f1f' : '#f6ffed',

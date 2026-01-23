@@ -44,7 +44,9 @@ import {
   Dropdown,
   Radio,
   Calendar,
-  Card
+  Card,
+  Modal,
+  Descriptions
 } from 'antd'
 import type { RadioChangeEvent, ConfigProviderProps } from 'antd'
 import type { Dayjs } from 'dayjs'
@@ -165,6 +167,11 @@ export default function DashboardPage() {
     loading: true
   })
 
+  // 日历相关状态
+  const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs())
+  const [calendarValue, setCalendarValue] = useState<Dayjs>(dayjs())
+  const [dateInfoVisible, setDateInfoVisible] = useState(false)
+
   const {
     token: { borderRadiusLG },
   } = theme.useToken()
@@ -195,27 +202,24 @@ export default function DashboardPage() {
       
       if (result.success && result.data) {
         setSystemStatus({
-          cpu: result.data.cpu || 0,
-          memory: result.data.memory || 0,
-          disk: result.data.disk || 0,
+          cpu: result.data.cpu ?? 0,
+          memory: result.data.memory ?? 0,
+          disk: result.data.disk ?? 0,
           loading: false
         })
       } else {
-        // 使用默认值
         setSystemStatus({
-          cpu: 25,
-          memory: 65,
-          disk: 40,
+          cpu: 0,
+          memory: 0,
+          disk: 0,
           loading: false
         })
       }
-    } catch (error) {
-      console.error('获取系统状态失败:', error)
-      // 使用默认值
+    } catch {
       setSystemStatus({
-        cpu: 25,
-        memory: 65,
-        disk: 40,
+        cpu: 0,
+        memory: 0,
+        disk: 0,
         loading: false
       })
     }
@@ -843,11 +847,22 @@ export default function DashboardPage() {
                     >
                       <Calendar
                         fullscreen={false}
-                        value={dayjs()}
+                        value={
+                          // 只有当查看的月份与选中日期的月份相同时，才显示选中状态
+                          // 否则只显示月份，不显示选中状态
+                          calendarValue.year() === selectedDate.year() && 
+                          calendarValue.month() === selectedDate.month()
+                            ? selectedDate
+                            : calendarValue
+                        }
                         onSelect={useCallback((date: Dayjs) => {
-                          // 日期选择回调函数
-                          // 当前仅用于日志记录，可根据业务需求扩展功能
-                          console.log('Selected date:', date.format('YYYY-MM-DD'))
+                          setSelectedDate(date)
+                          setDateInfoVisible(true)
+                          // 当选择日期时，更新日历显示到该日期所在的月份
+                          setCalendarValue(date)
+                        }, [])}
+                        onPanelChange={useCallback((date: Dayjs) => {
+                          setCalendarValue(date)
                         }, [])}
                         style={{
                           height: '100%'
@@ -861,6 +876,66 @@ export default function DashboardPage() {
           </Layout>
         </Layout>
       </ConfigProvider>
+
+      {/* 日期信息弹窗 */}
+      <Modal
+        title={
+          <Space>
+            <span>{currentLang === 'zh' ? '日期信息' : 'Date Information'}</span>
+            <Typography.Text type="secondary" style={{ fontSize: '14px', fontWeight: 'normal' }}>
+              {selectedDate.format('YYYY-MM-DD')}
+            </Typography.Text>
+          </Space>
+        }
+        open={dateInfoVisible}
+        onCancel={() => setDateInfoVisible(false)}
+        footer={[
+          <Button key="close" type="primary" onClick={() => setDateInfoVisible(false)}>
+            {currentLang === 'zh' ? '关闭' : 'Close'}
+          </Button>
+        ]}
+        width={500}
+      >
+        <Descriptions column={1} bordered size="middle">
+          <Descriptions.Item label={currentLang === 'zh' ? '公历日期' : 'Gregorian Date'}>
+            {currentLang === 'zh' 
+              ? selectedDate.format('YYYY年MM月DD日')
+              : selectedDate.format('MMMM DD, YYYY')
+            }
+          </Descriptions.Item>
+          <Descriptions.Item label={currentLang === 'zh' ? '星期' : 'Weekday'}>
+            {currentLang === 'zh' 
+              ? ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'][selectedDate.day()]
+              : selectedDate.format('dddd')
+            }
+          </Descriptions.Item>
+          <Descriptions.Item label={currentLang === 'zh' ? '相对日期' : 'Relative Date'}>
+            {(() => {
+              const diff = selectedDate.diff(dayjs(), 'day')
+              if (diff === 0) {
+                return currentLang === 'zh' ? '今天' : 'Today'
+              } else if (diff === 1) {
+                return currentLang === 'zh' ? '明天' : 'Tomorrow'
+              } else if (diff === -1) {
+                return currentLang === 'zh' ? '昨天' : 'Yesterday'
+              } else if (diff > 0) {
+                return currentLang === 'zh' ? `${diff}天后` : `${diff} days later`
+              } else {
+                return currentLang === 'zh' ? `${Math.abs(diff)}天前` : `${Math.abs(diff)} days ago`
+              }
+            })()}
+          </Descriptions.Item>
+          <Descriptions.Item label={currentLang === 'zh' ? '年份' : 'Year'}>
+            {selectedDate.format('YYYY')}
+          </Descriptions.Item>
+          <Descriptions.Item label={currentLang === 'zh' ? '月份' : 'Month'}>
+            {currentLang === 'zh' 
+              ? `${selectedDate.month() + 1}月`
+              : selectedDate.format('MMMM')
+            }
+          </Descriptions.Item>
+        </Descriptions>
+      </Modal>
     </>
   )
 } 

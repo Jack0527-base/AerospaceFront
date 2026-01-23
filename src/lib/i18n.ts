@@ -84,6 +84,29 @@ export const i18nTexts = {
     clear: '清空',
     readyToDetect: '图片已准备就绪，点击"开始检测"即可检测',
     
+    // 文件上传提示
+    fileTooLarge: '文件较大 ({size}MB)，识别时将自动优化处理以确保最佳识别效果',
+    uploadSuccess: '图片 "{name}" 上传成功，可以开始识别了',
+    onlyImageFiles: '只能上传图片文件!',
+    fileSizeExceeded: '图片大小不能超过 50MB!',
+    selectImageFirst: '请先选择图片文件',
+    invalidFileFormat: '文件格式无效，请重新选择',
+    dataCleared: '已清空所有数据',
+    
+    // 检测错误提示
+    detectionError: '检测过程中出现错误',
+    authFailed: '认证失败，请稍后重试',
+    detectionFailed: '识别失败',
+    noDefectDetected: '图片中未能识别出缺陷，请确保：\n1. 图片中包含清晰可见的绝缘子\n2. 绝缘子没有被遮挡\n3. 图片光线充足、对比度良好',
+    noNestDetected: '图片中未能识别出鸟巢，请确保：\n1. 图片中包含清晰可见的鸟巢\n2. 鸟巢没有被遮挡\n3. 图片光线充足、对比度良好',
+    imageProcessFailed: '图片处理失败，请尝试使用更小或质量更好的图片文件',
+    imageFormatError: '图片处理失败，请检查图片格式是否正确（支持JPG、PNG格式）',
+    networkError: '网络连接失败，请检查网络连接后重试',
+    requestTimeout: '请求超时，请重试',
+    unknownError: '检测过程中出现未知错误',
+    insulatorDetectionFailed: '绝缘子检测失败',
+    nestDetectionFailed: '鸟巢检测失败',
+    
     // 鸟巢检测页面
     nestDetectionTitle: '鸟巢检测',
     nestDetectionSubtitle: '上传图片，智能检测鸟巢',
@@ -185,6 +208,29 @@ export const i18nTexts = {
     detecting: 'Detecting...',
     clear: 'Clear',
     readyToDetect: 'Image is ready, click "Start Detection" to detect',
+    
+    // 文件上传提示
+    fileTooLarge: 'File is large ({size}MB), will be automatically optimized during detection for best recognition results',
+    uploadSuccess: 'Image "{name}" uploaded successfully, ready to start detection',
+    onlyImageFiles: 'Only image files are allowed!',
+    fileSizeExceeded: 'Image size cannot exceed 50MB!',
+    selectImageFirst: 'Please select an image file first',
+    invalidFileFormat: 'Invalid file format, please reselect',
+    dataCleared: 'All data cleared',
+    
+    // 检测错误提示
+    detectionError: 'An error occurred during detection',
+    authFailed: 'Authentication failed, please try again later',
+    detectionFailed: 'Detection Failed',
+    noDefectDetected: 'No defects detected in the image, please ensure:\n1. The image contains clearly visible insulators\n2. Insulators are not blocked\n3. The image has sufficient light and good contrast',
+    noNestDetected: 'No nest detected in the image, please ensure:\n1. The image contains clearly visible nests\n2. Nests are not blocked\n3. The image has sufficient light and good contrast',
+    imageProcessFailed: 'Image processing failed, please try a smaller or better quality image file',
+    imageFormatError: 'Image processing failed, please check if the image format is correct (supports JPG, PNG formats)',
+    networkError: 'Network connection failed, please check your network connection and try again',
+    requestTimeout: 'Request timeout, please try again',
+    unknownError: 'Unknown error occurred during detection',
+    insulatorDetectionFailed: 'Insulator detection failed',
+    nestDetectionFailed: 'Nest detection failed',
     
     // 鸟巢检测页面
     nestDetectionTitle: 'Nest Detection',
